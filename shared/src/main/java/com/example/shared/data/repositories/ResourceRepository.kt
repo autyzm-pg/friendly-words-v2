@@ -1,5 +1,6 @@
 package com.example.shared.data.repositories
 
+import com.example.shared.data.another.ResourceWithImages
 import com.example.shared.data.daos.ImageDao
 import com.example.shared.data.daos.ResourceDao
 import com.example.shared.data.database.AppDatabase
@@ -19,4 +20,5 @@ class ResourceRepository @Inject constructor(
     suspend fun getByName(name: String): Resource {
         return resourceDao.getByName(name) ?: throw IllegalArgumentException("Resource '$name' not found")
     }
+    //suspend fun getResourcesWithImages(): List<ResourceWithImages> = resourceDao.getResourcesWithImages()
 }

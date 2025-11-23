@@ -5,9 +5,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.shared.data.daos.ConfigurationDao
+import com.example.shared.data.daos.ConfigurationImageUsageDao
 import com.example.shared.data.daos.ConfigurationResourceDao
 import com.example.shared.data.daos.ImageDao
 import com.example.shared.data.daos.ResourceDao
+import com.example.shared.data.daos.ResourceImageDao
+import com.example.shared.data.entities.Resource
 import com.example.shared.data.repositories.ConfigurationRepository
 import dagger.Module
 import dagger.Provides
@@ -49,6 +52,13 @@ object AppModule {
     @Provides
     fun provideConfigurationResourceDao(db: AppDatabase): ConfigurationResourceDao =
         db.configurationResourceDao()
+    @Provides
+    fun provideConfigurationImageUsageDao(db: AppDatabase): ConfigurationImageUsageDao =
+        db.configurationImageUsageDao()
+    @Provides
+    fun provideResourceImageDao(db: AppDatabase): ResourceImageDao =
+        db.resourceImageDao()
+
     @Provides
     fun provideConfigurationRepository(
         dao: ConfigurationDao,

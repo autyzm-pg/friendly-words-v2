@@ -20,17 +20,4 @@ class ImageRepository @Inject constructor(private val imageDao: ImageDao) {
             if (refs == 0) imageDao.delete(image)
         }
     }
-    suspend fun linkImagesToResource(resourceId: Long, imageIds: List<Long>) {
-        imageDao.deleteImageLinksForResource(resourceId)
-        imageDao.insertResourceImageLinks(
-            imageIds.map { imageId -> ResourceImage(resourceId = resourceId, imageId = imageId) }
-        )
-    }
-
-    suspend fun unlinkImagesFromResource(resourceId: Long, imageIds: List<Long>) {
-        imageDao.deleteSpecificImageLinks(resourceId, imageIds)
-    }
-
-
-
 }

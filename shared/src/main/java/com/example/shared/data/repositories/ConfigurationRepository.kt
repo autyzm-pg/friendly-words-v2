@@ -17,63 +17,40 @@ import com.example.shared.data.daos.ConfigurationResourceDao
 
 @Singleton
 class ConfigurationRepository @Inject constructor(
-    private val dao: ConfigurationDao,
-    private val resourceDao: ResourceDao,
-    private val configurationResourceDao: ConfigurationResourceDao
+    private val configurationDao: ConfigurationDao,
+    private val configurationResourceRepo: ConfigurationResourceRepository,
+    private val configurationImageUsageRepo: ConfigurationImageUsageRepository,
+    private val resourceRepo: ResourceRepository
 ) {
+    fun getAll(): Flow<List<Configuration>> = configurationDao.getAll()
+    suspend fun getAllOnce(): List<Configuration> = configurationDao.getAllOnce()
 
-    // metody dla konfiguracji
-    fun getAll(): Flow<List<Configuration>> = dao.getAll()
-    suspend fun getAllOnce(): List<Configuration> = dao.getAllOnce()
+    suspend fun getById(id: Long): Configuration = configurationDao.getById(id)
 
-    suspend fun getById(id: Long): Configuration = dao.getById(id)
+    suspend fun insert(configuration: Configuration): Long = configurationDao.insert(configuration)
 
-    suspend fun insert(configuration: Configuration): Long = dao.insert(configuration)
+    suspend fun delete(configuration: Configuration) = configurationDao.delete(configuration)
 
-    suspend fun delete(configuration: Configuration) = dao.delete(configuration)
-
-    suspend fun update(configuration: Configuration) = dao.update(configuration)
+    suspend fun update(configuration: Configuration) = configurationDao.update(configuration)
 
     suspend fun setActiveConfiguration(configuration: Configuration, mode: String) {
-        dao.clearActiveConfiguration()
-        dao.activateConfiguration(configuration.id, mode)
+        configurationDao.clearActiveConfiguration()
+        configurationDao.activateConfiguration(configuration.id, mode)
     }
 
-    fun getActiveConfiguration(): Flow<Configuration?> = dao.getActiveConfiguration()
+    fun getActiveConfiguration(): Flow<Configuration?> = configurationDao.getActiveConfiguration()
 
-    // metody dla encji laczacej konfiguracje z zasobami/materialami
-    suspend fun addResource(link: ConfigurationResource) = dao.insertConfigurationResource(link)
-
-    suspend fun insertResources(resources: List<ConfigurationResource>) { dao.insertConfigurationResources(resources) }
-
-    suspend fun removeSingleResource(configurationId: Long, resourceId: Long) = dao.deleteSingleConfigurationResource(configurationId, resourceId)
-
-    suspend fun getResources(configurationId: Long): List<ConfigurationResource> = dao.getConfigurationResources(configurationId)
-
-    suspend fun deleteResourcesByConfigId(configId: Long) { dao.deleteConfigurationResourcesByConfigId(configId) }
-
-    // metody dla encji laczacej konfiguracje z obrazami dla zasobow znajdujacych sie w konfiguracji
-    suspend fun addImageUsage(usage: ConfigurationImageUsage) = dao.insertConfigurationImageUsage(usage)
-
-    suspend fun insertImageUsages(usages: List<ConfigurationImageUsage>) { dao.insertConfigurationImageUsages(usages) }
-
-    suspend fun removeAllImageUsages(configurationId: Long) = dao.deleteConfigurationImageUsagesForConfiguration(configurationId)
-
-    suspend fun removeSingleImageUsage(configurationId: Long, imageId: Long) = dao.deleteSingleConfigurationImageUsage(configurationId, imageId)
-
-    suspend fun getImageUsages(configurationId: Long): List<ConfigurationImageUsage> = dao.getConfigurationImageUsages(configurationId)
-
-    suspend fun deleteImageUsagesByConfigId(configId: Long) { dao.deleteConfigurationImageUsagesByConfigId(configId) }
-
+    // funkcje, ktore operuja na powiazaniach
     suspend fun getResourcesWithImagesForActiveConfig(): List<ResourceWithImages> {
-        val activeConfig = dao.getActiveConfiguration().firstOrNull() ?: return emptyList()
+        val activeConfig =
+            configurationDao.getActiveConfiguration().firstOrNull() ?: return emptyList()
 
         // Pobierz wszystkie powiązania ConfigurationResource
-        val configResources = dao.getConfigurationResources(activeConfig.id)
+        val configResources = configurationResourceRepo.getManyByConfigurationId(activeConfig.id)
         val resourceIds = configResources.map { it.resourceId }
 
         // Pobierz wszystkie zasoby z obrazami i filtruj po resourceIds
-        val allResourcesWithImages = resourceDao.getResourcesWithImages()
+        val allResourcesWithImages = resourceRepo.getResourcesWithImages()
         return allResourcesWithImages.filter { it.resource.id in resourceIds }
     }
 

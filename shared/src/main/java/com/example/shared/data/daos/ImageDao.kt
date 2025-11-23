@@ -25,14 +25,6 @@ interface ImageDao {
     @Query("SELECT COUNT(*) FROM resource_images WHERE imageId = :imageId")
     suspend fun getReferenceCount(imageId: Long): Int
 
-//    @Transaction
-//    suspend fun deleteIfUnreferenced(image: Image) {
-//        if (getReferenceCount(image.id) == 0) {
-//            delete(image)
-//        } else {
-//            throw IllegalStateException("Cannot delete image: it is still referenced by a resource.")
-//        }
-//    }
     @Query("SELECT images.* FROM images" +
             " INNER JOIN resource_images ON images.id = resource_images.imageId" +
             " WHERE resource_images.resourceId = :resourceId")
@@ -40,15 +32,4 @@ interface ImageDao {
 
     @Delete
     suspend fun delete(image: Image)
-
-    // crudy do obslugi encji laczacej zasoby z obrazami
-    @Query("DELETE FROM resource_images WHERE resourceId = :resourceId")
-    suspend fun deleteImageLinksForResource(resourceId: Long)
-
-    @Insert
-    suspend fun insertResourceImageLinks(links: List<ResourceImage>)
-
-    @Query("DELETE FROM resource_images WHERE resourceId = :resourceId AND imageId IN (:imageIds)")
-    suspend fun deleteSpecificImageLinks(resourceId: Long, imageIds: List<Long>)
-
 }
