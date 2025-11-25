@@ -22,6 +22,13 @@ import com.example.friendly_words.therapist.ui.components.NumberSelectorForPictu
 import com.example.friendly_words.therapist.ui.theme.DarkBlue
 import com.example.friendly_words.therapist.ui.theme.White
 import com.example.shared.data.another.ConfigurationTestState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import com.composables.core.ScrollArea
+import com.composables.core.VerticalScrollbar
+import com.composables.core.Thumb
+import com.composables.core.rememberScrollAreaState
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -33,6 +40,8 @@ fun ConfigurationTestScreen(
     onEvent: (ConfigurationTestEvent) -> Unit,
     onBackClick: () -> Unit
 ) {
+    val leftScrollState = rememberScrollState()
+    val leftScrollAreaState = rememberScrollAreaState(leftScrollState)
     var expanded by remember { mutableStateOf(false) }
     val options = listOf("{Słowo}", "Gdzie jest {Słowo}", "Pokaż gdzie jest {Słowo}")
     val labelColor = if (state.testEditEnabled) Color.Black else Color.Gray
@@ -124,14 +133,26 @@ fun ConfigurationTestScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Top
             ) {
-                Column(
+                Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    contentAlignment = Alignment.TopCenter
                 ) {
-                    NumberSelectorForPictures(
+                    ScrollArea(state = leftScrollAreaState) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .verticalScroll(leftScrollState),
+                                verticalArrangement = Arrangement.Top,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+
+                            NumberSelectorForPictures(
                         label = "Liczba obrazków wyświetlanych na ekranie:",
                         minValue = minAllowed,
                         maxValue = maxAllowed,
@@ -279,8 +300,20 @@ fun ConfigurationTestScreen(
                         )
                     }
                 }
+                VerticalScrollbar(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .fillMaxHeight()
+                        .width(4.dp)
+                ) {
+                    Thumb(Modifier.background(Color.Gray))
+                }
+            }
+        }
+    }
 
-                Spacer(modifier = Modifier.width(32.dp))
+
+    Spacer(modifier = Modifier.width(32.dp))
 
                 Column(
                     modifier = Modifier
