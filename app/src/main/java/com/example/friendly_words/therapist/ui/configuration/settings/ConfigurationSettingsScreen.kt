@@ -75,7 +75,6 @@ fun ConfigurationSettingsScreen(
             )
 
             when (selectedTabIndex) {
-                // 0) MATERIAŁY
                 0 -> ConfigurationMaterialScreen(
                     state = state.materialState,
                     hideExamples = state.hideExamples,
@@ -83,7 +82,6 @@ fun ConfigurationSettingsScreen(
                     onBackClick = onBackClick
                 )
 
-                // 1) UCZENIE
                 1 -> {
                     val material = state.materialState
 
@@ -99,16 +97,12 @@ fun ConfigurationSettingsScreen(
                     )
                 }
 
-                // 2) WZMOCNIENIA
                 2 -> ConfigurationReinforcementScreen(
                     state = state.reinforcementState,
                     onEvent = { viewModel.onEvent(ConfigurationSettingsEvent.Reinforcement(it)) },
                     onBackClick = onBackClick
                 )
 
-                // case 3 -> TEST
-                // 3 -> TEST
-                // 3) TEST
                 3 -> {
                     val material = state.materialState
                     val testState = state.testState
@@ -135,15 +129,13 @@ fun ConfigurationSettingsScreen(
                     ConfigurationTestScreen(
                         state = testState,
                         availableImagesForTest = availableForTest,
-                        availableImagesForLearning = availableForLearning,     // ⬅️ NOWE
-                        learningImageCount = learningState.imageCount,         // ⬅️ NOWE
+                        availableImagesForLearning = availableForLearning,
+                        learningImageCount = learningState.imageCount,
                         onEvent = { viewModel.onEvent(ConfigurationSettingsEvent.Test(it)) },
                         onBackClick = onBackClick
                     )
                 }
 
-
-                // 4) ZAPIS
                 4 -> ConfigurationSaveScreen(
                     materialState = state.materialState,
                     learningState = state.learningState,

@@ -73,8 +73,6 @@ fun YesNoDialog(
     }
 }
 
-
-// tu preview za duzo nic nie daje bo nie pokazuje odpowiedniej wielkosci okna
 @Preview(showBackground = true)
 @Composable
 fun YesNoDialogPreview() {

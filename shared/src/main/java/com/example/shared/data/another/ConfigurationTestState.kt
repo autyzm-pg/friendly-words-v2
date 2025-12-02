@@ -38,7 +38,7 @@ fun ConfigurationLearningState.toDerivedTestState(): ConfigurationTestState {
         captionsEnabled = this.captionsEnabled,
         readingEnabled = this.readingEnabled,
         testEditEnabled = false,
-        answerTime      = this.timeCount
+        answerTime = this.timeCount
     )
 }
 

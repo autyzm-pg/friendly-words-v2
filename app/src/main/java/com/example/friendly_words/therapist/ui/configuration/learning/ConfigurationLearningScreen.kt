@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.friendly_words.therapist.ui.components.NumberSelectorForPictures
 import com.example.friendly_words.therapist.ui.components.NumberSelector
-import com.example.friendly_words.therapist.ui.components.NumberSelectorForPicturesPlain   // ⬅️ DODANY IMPORT
+import com.example.friendly_words.therapist.ui.components.NumberSelectorForPicturesPlain
 import com.example.friendly_words.therapist.ui.theme.DarkBlue
 import com.example.friendly_words.therapist.ui.theme.White
 import com.example.shared.data.another.ConfigurationLearningState
@@ -31,7 +31,6 @@ fun ConfigurationLearningScreen(
     onEvent: (ConfigurationLearningEvent) -> Unit,
     onBackClick: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
     var textFieldSize by remember { mutableStateOf(IntSize.Zero) }
     val options = listOf("{Słowo}", "Gdzie jest {Słowo}", "Pokaż gdzie jest {Słowo}")
 
@@ -84,7 +83,7 @@ fun ConfigurationLearningScreen(
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            // Lewa kolumna
+
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -103,15 +102,14 @@ fun ConfigurationLearningScreen(
 
                     Spacer(modifier = Modifier.height(29.dp))
 
-                    // === LICZBA OBRAZKÓW ===
                     if (available == 0) {
                         // 0 dostępnych -> neutralny selector (bez szarzenia label/value)
                         NumberSelectorForPicturesPlain(
                             label = "Liczba obrazków wyświetlanych na ekranie:",
                             minValue = 0,
                             maxValue = 0,
-                            value = state.imageCount, // i tak ustawiany na 0 w LaunchedEffect
-                            enabled = false,          // przyciski off, ale wygląd bez zmian
+                            value = state.imageCount,
+                            enabled = false,
                             labelColor = Color.Black
                         )
 
@@ -228,7 +226,6 @@ fun ConfigurationLearningScreen(
                 }
             }
 
-            // Prawa kolumna
             Box(
                 modifier = Modifier
                     .weight(1f)

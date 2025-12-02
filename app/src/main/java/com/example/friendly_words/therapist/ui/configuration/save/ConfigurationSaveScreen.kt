@@ -58,7 +58,6 @@ fun ConfigurationSaveScreen(
     onBackClick: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -160,7 +159,6 @@ fun ConfigurationSaveScreen(
                         .fillMaxSize()
                         .padding(start = 55.dp, end = 15.dp)
                 ) {
-                    // Nagłówki
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(text = "INFORMACJE O KROKU", modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold, color = DarkBlue)
                         Spacer(modifier = Modifier.width(110.dp))
@@ -248,9 +246,7 @@ fun ConfigurationSaveScreen(
                         Divider()
                     }
                 }
-
             }
-
         }
     }
 
@@ -265,26 +261,4 @@ fun ConfigurationSaveScreen(
         onDismiss = { onEvent(ConfigurationSaveEvent.DismissDuplicateNameDialog) }
     )
 
-}
-
-
-@Composable
-fun InfoLabel(label: String) {
-    Text(
-        text = label,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-    )
-}
-
-@Composable
-fun InfoValue(value: String) {
-    Text(
-        text = value,
-        fontSize = 16.sp,
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-    )
 }

@@ -61,7 +61,6 @@ fun ConfigurationsListScreen(
     LaunchedEffect(Unit) {
         val handle = navController.currentBackStackEntry?.savedStateHandle
 
-        // 🔹 Odbierz nowo dodane ID
         val passedId = handle?.get<Long>("newlyAddedConfigId")
         if (passedId != null) {
             android.util.Log.d("ConfigurationsListScreen", "received newlyAddedConfigId=$passedId")
@@ -69,7 +68,6 @@ fun ConfigurationsListScreen(
             handle.remove<Long>("newlyAddedConfigId")
         }
 
-        // 🔹 Odbierz message (jak wcześniej)
         val message = handle?.get<String>("message")
         message?.let {
             snackbarHostState.showSnackbar(
@@ -83,7 +81,7 @@ fun ConfigurationsListScreen(
     val infoMessage = state.infoMessage
     LaunchedEffect(state.shouldScrollToTop) {
         if (state.shouldScrollToTop) {
-            lazyListState.scrollToItem(0) // ⬅️ scroll na samą górę
+            lazyListState.scrollToItem(0)
             viewModel.onEvent(ConfigurationEvent.ScrollToTopHandled)
         }
     }
@@ -115,14 +113,10 @@ fun ConfigurationsListScreen(
                 "Attempting to scroll to config with id: $newId"
             )
 
-            // Zawsze wyczyść filtry żeby nowa konfiguracja była widoczna
             viewModel.onEvent(ConfigurationEvent.SearchChanged(""))
             viewModel.onEvent(ConfigurationEvent.ToggleHideExamples(false))
-
-            // Poczekaj aż filtry się zaktualizują
             kotlinx.coroutines.delay(300)
 
-            // Znajdź indeks w pełnej liście konfiguracji
             val index = state.configurations.indexOfFirst { it.id == newId }
 
             android.util.Log.d(
@@ -131,7 +125,6 @@ fun ConfigurationsListScreen(
             )
 
             if (index != -1) {
-                // Użyj scrollToItem zamiast animateScrollToItem dla pewności
                 lazyListState.scrollToItem(index)
                 android.util.Log.d(
                     "ConfigurationsListScreen",
@@ -139,11 +132,9 @@ fun ConfigurationsListScreen(
                 )
             }
 
-            // Oznacz scrollowanie jako obsłużone
             viewModel.onEvent(ConfigurationEvent.ScrollHandled)
         }
     }
-
 
     Scaffold(
         topBar = {
@@ -184,15 +175,15 @@ fun ConfigurationsListScreen(
                 Snackbar(
                     modifier = Modifier
                         .padding(16.dp)
-                        .height(80.dp),  // Zwiększona wysokość
+                        .height(80.dp),
                     backgroundColor = Color.DarkGray,
                     contentColor = Color.White
                 ) {
                     Text(
                         text = snackbarData.message,
-                        fontSize = 28.sp,                  // Większa czcionka
-                        textAlign = TextAlign.Center,      // Wyrównanie do środka
-                        modifier = Modifier.fillMaxWidth() // Zajmuje całą szerokość
+                        fontSize = 28.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
@@ -225,7 +216,7 @@ fun ConfigurationsListScreen(
                         onValueChange = { viewModel.onEvent(ConfigurationEvent.SearchChanged(it)) },
                         modifier = Modifier
                             .weight(1f)
-                            .heightIn(min = 56.dp), // żeby ładnie się wyrównało z przyciskiem
+                            .heightIn(min = 56.dp),
                         placeholder = { Text("Wyszukaj", fontSize = calculateResponsiveFontSize(35.sp)) },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon", tint = Color.Gray) },
                         singleLine = true,
@@ -248,7 +239,6 @@ fun ConfigurationsListScreen(
 
                     Spacer(Modifier.width(12.dp))
 
-
                     IconButton(
                         onClick = {
                             val intent = Intent(context, MainActivityChild::class.java).apply {
@@ -256,7 +246,6 @@ fun ConfigurationsListScreen(
                                     Intent.FLAG_ACTIVITY_NEW_TASK or
                                             Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 )
-
                             }
                             context.startActivity(intent)
                         },
@@ -273,8 +262,6 @@ fun ConfigurationsListScreen(
                         )
                     }
                 }
-
-
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Spacer(modifier = Modifier.width(20.dp))
@@ -384,7 +371,6 @@ fun ConfigurationsListScreen(
                                 },
                                 onCopy = { viewModel.onEvent(ConfigurationEvent.CopyRequested(config)) }
                             )
-
                             Spacer(modifier = Modifier.height(20.dp))
                         }
                     }
@@ -452,7 +438,6 @@ fun ConfigurationItem(
         switchChecked = activeMode == "test"
     }
 
-    // 🔹 Stan dymku informacji dla przykładów
     var showExampleInfo by remember { mutableStateOf(false) }
 
     Box(
@@ -494,7 +479,6 @@ fun ConfigurationItem(
                                     }
                                 }
                             )
-                            // 🔹 Ikona informacji dla przykładów
                             if (configuration.isExample) {
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Box {

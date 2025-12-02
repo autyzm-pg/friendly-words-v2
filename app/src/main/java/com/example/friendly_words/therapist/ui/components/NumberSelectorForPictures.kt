@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.friendly_words.therapist.ui.theme.DarkBlue
@@ -20,8 +19,8 @@ fun NumberSelectorForPictures(
     maxValue: Int,
     value: Int,
     onValueChange: (Int) -> Unit = {},
-    enabled: Boolean = true,                // kontroluje PRZYCISKI
-    labelEnabled: Boolean = enabled,        // 🔸 NOWE: kontroluje WYGLĄD tekstów
+    enabled: Boolean = true,
+    labelEnabled: Boolean = enabled,
     labelColor: Color = Color.Black,
     onDisabledDecrementClick: (() -> Unit)? = null,
     onDisabledIncrementClick: (() -> Unit)? = null

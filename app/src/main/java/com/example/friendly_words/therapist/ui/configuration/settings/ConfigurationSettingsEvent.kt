@@ -15,8 +15,5 @@ sealed class ConfigurationSettingsEvent {
     data object ShowExitDialog : ConfigurationSettingsEvent()
     data object CancelExitDialog : ConfigurationSettingsEvent()
     data object ConfirmExitDialog : ConfigurationSettingsEvent()
-    //object ClearInfoMessage : ConfigurationSettingsEvent()
     object ResetNavigation : ConfigurationSettingsEvent()
-
-
 }

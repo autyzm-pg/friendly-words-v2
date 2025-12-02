@@ -23,17 +23,13 @@ data class ImageUsageInfo(
 class ConfigurationMaterialViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
-    // główny stan tego ekranu
-    // (tu możesz wstawić swój stan początkowy, jeśli go gdzieś budujesz)
-    private val _uiState = MutableStateFlow(ConfigurationMaterialState())
-    val uiState: StateFlow<ConfigurationMaterialState> = _uiState
 
-    // to będzie nasze "ukryj przykładowe"
+    private val _uiState = MutableStateFlow(ConfigurationMaterialState())
+
     private val _hideExamples = MutableStateFlow(false)
     val hideExamples: StateFlow<Boolean> = _hideExamples
 
     init {
-        // słuchamy preferencji – dokładnie tak jak w MaterialsListViewModel
         viewModelScope.launch {
             preferencesRepository.hideExampleMaterialsFlow.collect { hide ->
                 _hideExamples.value = hide

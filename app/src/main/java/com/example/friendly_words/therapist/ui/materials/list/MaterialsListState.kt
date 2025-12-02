@@ -5,7 +5,6 @@ import com.example.shared.data.entities.Resource
 
 data class MaterialsListState(
     val materials: List<Resource> = emptyList(),
-    //val imagesForSelected: List<Image> = emptyList(),
     val selectedIndex: Int? = 0,
     val showDeleteDialog: Boolean = false,
     val materialToDelete: Pair<Int, Resource>? = null,
@@ -17,5 +16,4 @@ data class MaterialsListState(
     val usedInSteps: List<String>? = null,
     val usedInConfigurations: List<String>? = null,
     val showUsedInDialogFor: Resource? = null
-
 )

@@ -1,6 +1,5 @@
 package com.example.friendly_words.therapist.ui.materials.list
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -61,8 +60,6 @@ fun MaterialsListScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     var searchQuery by remember { mutableStateOf("") }
 
-    // --- JEDNORAZOWY MOSTEK DLA NOWO DODANEGO MATERIAŁU ---
-    // Pobierz ID nowo utworzonego materiału z backStackEntry i od razu wyczyść.
     val newlySavedId = remember {
         navController.currentBackStackEntry
             ?.savedStateHandle
@@ -72,11 +69,9 @@ fun MaterialsListScreen(
             ?.savedStateHandle
             ?.remove<Long>("newlySavedResourceId")
     }
-    // Pozwoli odpalić efekt tylko raz (nie nadpisze zaznaczenia po późniejszych zmianach listy)
     var newIdConsumed by remember { mutableStateOf(false) }
     LaunchedEffect(newlySavedId, state.materials) {
         if (!newIdConsumed && newlySavedId != null) {
-            // odpal dopiero gdy nowy zasób jest naprawdę na liście
             val exists = state.materials.any { it.id == newlySavedId }
             if (exists) {
                 viewModel.onEvent(MaterialsListEvent.SelectByResourceId(newlySavedId))
@@ -84,9 +79,7 @@ fun MaterialsListScreen(
             }
         }
     }
-    // ------------------------------------------------------
 
-    // Pokazanie komunikatu przekazanego przez nawigację (np. z ekranu edycji)
     LaunchedEffect(Unit) {
         val message = navController.currentBackStackEntry
             ?.savedStateHandle
@@ -102,7 +95,6 @@ fun MaterialsListScreen(
         }
     }
 
-    // Snackbar na infoMessage z ViewModelu + czyszczenie po wyświetleniu
     LaunchedEffect(state.infoMessage) {
         state.infoMessage?.let {
             snackbarHostState.showSnackbar(
@@ -183,7 +175,6 @@ fun MaterialsListScreen(
                 }
         ) {
 
-            // Lista materiałów
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -262,7 +253,7 @@ fun MaterialsListScreen(
                                 Box(
                                     modifier = Modifier
                                         .clickable(
-                                            indication = null, // ⬅️ wyłącza ripple
+                                            indication = null,
                                             interactionSource = remember { MutableInteractionSource() }
                                         ) {
                                             showHideExamplesInfo = false
@@ -275,7 +266,6 @@ fun MaterialsListScreen(
                                         modifier = Modifier.padding(8.dp)
                                     )
                                 }
-
                             }
                         }
                     )
@@ -293,7 +283,6 @@ fun MaterialsListScreen(
                 val listState = rememberLazyListState()
                 val scrollAreaState = rememberScrollAreaState(listState)
 
-                // Scroll do aktualnie wybranego elementu
                 LaunchedEffect(state.selectedIndex, searchQuery, state.hideExamples) {
                     state.selectedIndex?.let { selectedIdx ->
                         if (selectedIdx >= 0) {
@@ -307,13 +296,7 @@ fun MaterialsListScreen(
                                 val filteredIndex = filteredMaterials.indexOf(material)
 
                                 if (filteredIndex >= 0) {
-                                    Log.d(
-                                        "MaterialsListScreen",
-                                        "Scrolling to selectedIndex = $selectedIdx → filteredIndex = $filteredIndex, resourceId = ${material.id}"
-                                    )
                                     listState.animateScrollToItem(filteredIndex)
-                                } else {
-                                    Log.d("MaterialsListScreen", "Selected material not visible in filtered list")
                                 }
                             }
                         }
@@ -429,7 +412,6 @@ fun MaterialsListScreen(
                 }
             }
 
-            // Obrazki dla wybranego materiału
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -507,7 +489,6 @@ fun MaterialsListScreen(
         }
     }
 
-    // Dialog potwierdzający usunięcie
     val materialToDelete = state.materialToDelete
     if (state.showDeleteDialog && materialToDelete != null) {
         materialToDelete.let { (_, name) ->
@@ -532,8 +513,6 @@ fun MaterialsListScreen(
             onDismiss = { viewModel.onEvent(MaterialsListEvent.DismissDeleteDialog) }
         )
     }
-
-
 
     state.showCopyDialogFor?.let { material ->
         YesNoDialog(

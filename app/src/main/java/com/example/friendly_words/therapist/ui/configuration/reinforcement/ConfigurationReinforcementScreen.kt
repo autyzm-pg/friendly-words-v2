@@ -20,7 +20,6 @@ import com.example.shared.data.another.ConfigurationReinforcementState
 
 @Composable
 fun ConfigurationReinforcementScreen(
-
     state: ConfigurationReinforcementState,
     onEvent: (ConfigurationReinforcementEvent) -> Unit,
     onBackClick: () -> Unit
@@ -35,7 +34,6 @@ fun ConfigurationReinforcementScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // lewa strona ekranu
             val configuration = LocalConfiguration.current
             val screenHeight = configuration.screenHeightDp.dp
             Column(
@@ -120,7 +118,6 @@ fun ConfigurationReinforcementScreen(
 
             }
 
-            //prawa strona ekranu
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -165,5 +162,3 @@ fun ConfigurationReinforcementScreen(
         }
     }
 }
-
-

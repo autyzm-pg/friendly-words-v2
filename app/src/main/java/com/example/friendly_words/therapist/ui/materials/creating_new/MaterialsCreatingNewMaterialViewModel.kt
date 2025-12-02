@@ -7,12 +7,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.friendly_words.R
 import com.example.shared.data.entities.Image
 import com.example.shared.data.entities.Resource
 import com.example.shared.data.repositories.ImageRepository
 import com.example.shared.data.repositories.ResourceRepository
-import dagger.assisted.Assisted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -44,7 +42,7 @@ class MaterialsCreatingNewMaterialViewModel @Inject constructor(
     )
     val state: StateFlow<MaterialsCreatingNewMaterialState> = _state
 
-    private suspend fun copyImageToInternalStorage(uri: Uri): String {
+    private fun copyImageToInternalStorage(uri: Uri): String {
         val inputStream = context.contentResolver.openInputStream(uri)
             ?: throw IOException("Cannot open input stream for URI: $uri")
 
@@ -57,7 +55,6 @@ class MaterialsCreatingNewMaterialViewModel @Inject constructor(
 
         return file.absolutePath
     }
-
 
     init {
         viewModelScope.launch {
@@ -94,7 +91,7 @@ class MaterialsCreatingNewMaterialViewModel @Inject constructor(
             }
             is MaterialsCreatingNewMaterialEvent.RemoveImage -> {
                 if (resourceIdToEdit != null && event.image.id != 0L) {
-                    imagesToUnlink.add(event.image) // dodaj do usunięcia przy zapisie
+                    imagesToUnlink.add(event.image)
                 }
                 _state.update {
                     it.copy(images = it.images.filterNot { img -> img.path == event.image.path })
@@ -122,7 +119,6 @@ class MaterialsCreatingNewMaterialViewModel @Inject constructor(
                         _state.update { it.copy(showEmptyTextFieldsDialog = true) }
                         return@launch
                     }
-
 
                     val allResources = resourceRepository.getAllOnce()
                     val alreadyExists = allResources.any {
@@ -162,7 +158,7 @@ class MaterialsCreatingNewMaterialViewModel @Inject constructor(
                         it.copy(
                             saveCompleted = true,
                             newlySavedResourceId = resourceId,
-                            showDuplicateNameConfirmation = false // Resetuj flagę
+                            showDuplicateNameConfirmation = false
                         )
                     }
 
@@ -241,13 +237,4 @@ class MaterialsCreatingNewMaterialViewModel @Inject constructor(
             }
         }
     }
-//    private suspend fun reloadImages() {
-//        val id = resourceIdToEdit
-//        val images = if (id != null) {
-//            imageRepository.getByResourceId(id)
-//        } else {
-//            imageRepository.getAll().filter { it.resourceId == null }
-//        }
-//        _state.update { it.copy(images = images) }
-//    }
 }

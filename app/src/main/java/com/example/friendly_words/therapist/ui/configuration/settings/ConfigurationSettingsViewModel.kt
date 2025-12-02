@@ -39,26 +39,22 @@ class ConfigurationSettingsViewModel @Inject constructor(
     private val configurationRepository: ConfigurationRepository,
     private val resourceRepository: ResourceRepository,
     private val imageRepository: ImageRepository,
-    private val preferencesRepository: PreferencesRepository,       // 👈 DODANE
+    private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ConfigurationSettingsState())
     val state: StateFlow<ConfigurationSettingsState> = _state
 
     init {
-        // 1. od razu pobierz dostępne materiały
         viewModelScope.launch {
             updateAvailableWordsToAdd()
         }
 
-        // 2. słuchaj preferencji „ukryj przykładowe materiały”
         viewModelScope.launch {
             preferencesRepository.hideExampleMaterialsFlow.collect { hide ->
                 _state.update {
                     it.copy(hideExamples = hide)
                 }
-                // za każdym razem, gdy zmienia się hideExamples,
-                // możesz też odświeżyć listę dostępnych, jeśli chcesz ją przycinać już tu:
                 updateAvailableWordsToAdd()
             }
         }
@@ -81,7 +77,7 @@ class ConfigurationSettingsViewModel @Inject constructor(
                 when (val materialEvent = event.event) {
                     is ConfigurationMaterialEvent.AddWord -> {
                         viewModelScope.launch {
-                            val resource = resourceRepository.getById(materialEvent.id) ?: return@launch
+                            val resource = resourceRepository.getById(materialEvent.id)
                             val images = imageRepository.getByResourceId(resource.id)
 
                             val newVocabularyItem = VocabularyItem(
@@ -326,11 +322,7 @@ class ConfigurationSettingsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Odświeża listę materiałów, które można dodać w dialogu "DODAJ".
-     * Uwzględnia już materiały użyte w konfiguracji, a jeśli w stanie mamy
-     * hideExamples == true – to także ukrywa przykładowe.
-     */
+    // odświeża listę dostępnych słów w dialogu DODAJ
     private suspend fun updateAvailableWordsToAdd() {
         val allResources = resourceRepository.getAllOnce()
         val current = _state.value
@@ -338,7 +330,6 @@ class ConfigurationSettingsViewModel @Inject constructor(
 
         var available = allResources.filter { it.id !in usedIds }
 
-        // 👈 tu używamy flagi ze stanu
         if (current.hideExamples) {
             available = available.filter { !it.isExample }
         }
@@ -438,8 +429,6 @@ class ConfigurationSettingsViewModel @Inject constructor(
                     )
                 )
             }
-
-            // po załadowaniu też uaktualnij dostępne
             updateAvailableWordsToAdd()
         }
     }

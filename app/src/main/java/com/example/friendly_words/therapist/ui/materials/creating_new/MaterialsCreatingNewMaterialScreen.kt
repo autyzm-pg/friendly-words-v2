@@ -12,39 +12,32 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.friendly_words.R
 import com.example.friendly_words.therapist.ui.components.NewConfigurationTopBar
 import com.example.friendly_words.therapist.ui.components.YesNoDialog
 import com.example.friendly_words.therapist.ui.theme.DarkBlue
 import com.example.friendly_words.therapist.ui.theme.LightBlue
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.friendly_words.therapist.ui.components.InfoDialog
 import java.io.File
 import androidx.compose.ui.platform.LocalContext
 import java.io.IOException
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.text.KeyboardActions
@@ -60,6 +53,7 @@ import androidx.navigation.NavController
 import java.io.FileOutputStream
 import com.example.shared.data.entities.Image
 import com.example.friendly_words.therapist.ui.main.NavRoutes
+
 private sealed class GridTile {
     data class Photo(val image: Image) : GridTile()
     data object Placeholder : GridTile()
@@ -67,7 +61,7 @@ private sealed class GridTile {
 
 @Composable
 private fun rememberHideKeyboard(): () -> Unit {
-    val focusManager      = LocalFocusManager.current
+    val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     return {
         focusManager.clearFocus(force = true)
@@ -81,8 +75,6 @@ fun MaterialsCreatingNewMaterialScreen(
     viewModel: MaterialsCreatingNewMaterialViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
     onSaveClick: (Long) -> Unit,
-    //resourceId: Long?
-
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
@@ -96,33 +88,18 @@ fun MaterialsCreatingNewMaterialScreen(
             hideKeyboard()
             state.newlySavedResourceId?.let { newId ->
 
-                // 1) wypisz current/previous entry i ich klucze
-                val currentEntry = navController.currentBackStackEntry
-                val prevEntry    = navController.previousBackStackEntry
-                Log.d("NavDebug", "▶▶ current route = ${currentEntry?.destination?.route}, " +
-                        "handleKeys = ${currentEntry?.savedStateHandle?.keys()}")
-                Log.d("NavDebug", "▶▶ previous route = ${prevEntry?.destination?.route}, " +
-                        "handleKeys = ${prevEntry?.savedStateHandle?.keys()}")
-
-                // 2) wypisz klucze handle’u dla ekranu listy po jego ROUTE
                 val listEntry = navController.getBackStackEntry(NavRoutes.MATERIALS)
-                Log.d("NavDebug", "▶▶ MATERIALS handle keys before set = ${listEntry.savedStateHandle.keys()}")
 
-                // 3) zapis nowego ID i wiadomości pod tym handle’em
                 listEntry.savedStateHandle["newlySavedResourceId"] = newId
-                listEntry.savedStateHandle["message"]            =
+                listEntry.savedStateHandle["message"] =
                     if (state.isEditing) "Pomyślnie zaktualizowano materiał"
-                    else                   "Pomyślnie dodano materiał"
+                    else "Pomyślnie dodano materiał"
 
-                // 4) wróć do ekranu listy
                 navController.popBackStack()
             }
             viewModel.onEvent(MaterialsCreatingNewMaterialEvent.ResetSaveCompleted)
         }
     }
-
-
-
 
     LaunchedEffect(state.exitWithoutSaving) {
         if (state.exitWithoutSaving) {
@@ -137,7 +114,6 @@ fun MaterialsCreatingNewMaterialScreen(
         keyboardController?.show()
     }
 
-    // Launcher do wyboru obrazu z galerii
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
@@ -201,13 +177,13 @@ fun MaterialsCreatingNewMaterialScreen(
                 }
         ) {
             Row(modifier = Modifier.fillMaxSize().weight(1f)) {
-                // Lewa kolumna
+
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(40.dp))//bylo 110
+                    Spacer(modifier = Modifier.height(40.dp))
 
                     Text("Uczone pojęcie (słowo)", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = DarkBlue)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -242,7 +218,7 @@ fun MaterialsCreatingNewMaterialScreen(
                     Text("Kategoria", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = DarkBlue)
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
-                        value = state.category, // <-- wymaga pola 'category' w stanie
+                        value = state.category,
                         onValueChange = { viewModel.onEvent(MaterialsCreatingNewMaterialEvent.CategoryChanged(it)) },
                         label = { Text("Wpisz kategorię (np. zwierzę)") },
                         modifier = Modifier
@@ -265,7 +241,6 @@ fun MaterialsCreatingNewMaterialScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Checkbox: czy zezwolić na edycję "Nazwa zasobu"
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth(0.8f)
@@ -336,7 +311,6 @@ fun MaterialsCreatingNewMaterialScreen(
 
                 }
 
-                // Prawa kolumna
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.SpaceBetween,
@@ -354,7 +328,6 @@ fun MaterialsCreatingNewMaterialScreen(
                             state.images.map { GridTile.Photo(it) } + GridTile.Placeholder
                         }
                         val groupedTiles = tiles.chunked(3)
-
 
                         Box(
                             modifier = Modifier
@@ -437,7 +410,6 @@ fun MaterialsCreatingNewMaterialScreen(
                                                 }
                                             }
                                         }
-                                        // wypełnij wiersz pustymi miejscami, jeśli ma < 3 elementy
                                         repeat(3 - group.size) {
                                             Spacer(modifier = Modifier.weight(1f))
                                         }
@@ -448,7 +420,6 @@ fun MaterialsCreatingNewMaterialScreen(
                         }
                     }
 
-                    // 🔽 Przyciski na dole
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -522,7 +493,5 @@ fun MaterialsCreatingNewMaterialScreen(
                 }
             )
         }
-
-
     }
 }

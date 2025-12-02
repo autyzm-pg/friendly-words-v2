@@ -42,7 +42,7 @@ fun YesNoDialogWithName(
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // info – tylko jeśli podane
+
                     if (!info.isNullOrBlank()) {
                         Text(
                             text = info,
@@ -98,8 +98,6 @@ fun YesNoDialogWithName(
     }
 }
 
-
-// tu preview za duzo nic nie daje bo nie pokazuje odpowiedniej wielkosci okna
 @Preview(showBackground = true)
 @Composable
 fun YesNoDialogWithNamePreview() {

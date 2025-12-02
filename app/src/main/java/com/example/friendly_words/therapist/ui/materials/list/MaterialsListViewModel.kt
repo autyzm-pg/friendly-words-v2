@@ -1,22 +1,16 @@
 package com.example.friendly_words.therapist.ui.materials.list
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.friendly_words.therapist.data.PreferencesRepository
-import com.example.shared.data.entities.Image
 import kotlinx.coroutines.flow.filterNotNull
-
-import com.example.shared.data.entities.Resource
 import com.example.shared.data.repositories.ConfigurationRepository
 import com.example.shared.data.repositories.ImageRepository
 import com.example.shared.data.repositories.ResourceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,11 +24,8 @@ class MaterialsListViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-//    var uiState = mutableStateOf(MaterialsListState())
     private val _uiState = MutableStateFlow(MaterialsListState())
     val uiState: StateFlow<MaterialsListState> = _uiState
-
-
 
     init {
 
@@ -49,14 +40,12 @@ class MaterialsListViewModel @Inject constructor(
         viewModelScope.launch {
             savedStateHandle
                 .getStateFlow<Long?>("newlySavedResourceId", null)
-                .filterNotNull()            // odfiltrowujemy pierwsze null-emisje
+                .filterNotNull()
                 .collect { newId ->
-                    Log.d("MaterialsListVM", "⬅️ really collected newlySavedResourceId = $newId")
                     _uiState.update { it.copy(pendingSelectId = newId) }
                     savedStateHandle["newlySavedResourceId"] = null
                 }
         }
-        // 2. Nasłuchiwanie zmian w bazie zasobów
         viewModelScope.launch {
             resourceRepository.getAll().collect { rawResources ->
 
@@ -67,7 +56,6 @@ class MaterialsListViewModel @Inject constructor(
                     }
                 }
 
-                // Jeśli jest ID zasobu do zaznaczenia, szukamy jego indeksu
                 val pendingId = _uiState.value.pendingSelectId
                 val indexToSelect = pendingId?.let { id ->
                     resources.indexOfFirst { it.id == id }.takeIf { it != -1 }
@@ -78,7 +66,7 @@ class MaterialsListViewModel @Inject constructor(
                         materials = resources,
                         imagesForSelected = imagesById,
                         selectedIndex = indexToSelect ?: it.selectedIndex?.coerceAtMost(resources.lastIndex),
-                        pendingSelectId = null // Resetujemy
+                        pendingSelectId = null
                     )
                 }
             }
@@ -95,7 +83,6 @@ class MaterialsListViewModel @Inject constructor(
                 val selectedResource = _uiState.value.materials.getOrNull(selected) ?: return
 
                 viewModelScope.launch {
-                    //val allImages = imageRepository.getAll()
                     val relatedImages = imageRepository.getByResourceId(selectedResource.id)
 
                     val updatedMap = _uiState.value.imagesForSelected.toMutableMap().apply {
@@ -106,8 +93,6 @@ class MaterialsListViewModel @Inject constructor(
                         selectedIndex = selected,
                         imagesForSelected = updatedMap
                     )}
-
-
                 }
             }
             is MaterialsListEvent.ToggleHideExamples -> {
@@ -128,22 +113,18 @@ class MaterialsListViewModel @Inject constructor(
                 viewModelScope.launch {
                     val resource = event.resource
 
-                    // 🔸 tu jest cały klucz:
                     val configurations = configurationRepository
                         .getConfigurationNamesUsingResource(resource.id)
 
                     if (configurations.isNotEmpty()) {
-                        // materiał jest używany → pokaż specjalny popup
                         _uiState.update {
                             it.copy(
                                 showUsedInDialogFor = resource,
                                 usedInConfigurations = configurations,
-                                // WAŻNE: zapamiętaj też co faktycznie chcieliśmy usunąć
                                 materialToDelete = event.index to event.resource
                             )
                         }
                     } else {
-                        // nie jest używany → normalny popup
                         _uiState.update {
                             it.copy(
                                 showDeleteDialog = true,
@@ -156,10 +137,8 @@ class MaterialsListViewModel @Inject constructor(
 
 
             is MaterialsListEvent.SelectByResourceId -> {
-                // znajdź index po resourceId
                 val idx = _uiState.value.materials.indexOfFirst { it.id == event.resourceId }
                 if (idx != -1) {
-                    // zaktualizuj selectedIndex i wczytaj obrazki tak jak przy manualnym kliknięciu
                     onEvent(MaterialsListEvent.SelectMaterial(idx))
                 }
             }
@@ -222,21 +201,16 @@ class MaterialsListViewModel @Inject constructor(
                         it.copy(
                             showCopyDialogFor = null,
                             infoMessage = "Skopiowano materiał: ${original.name}",
-                            // ⬇ kluczowe – odpali zaznaczenie i scroll identycznie jak przy „nowym”:
                             pendingSelectId = newId
                         )
                     }
                 }
             }
-
-
             is MaterialsListEvent.DismissCopyDialog -> {
                 _uiState.update {
                     it.copy(showCopyDialogFor = null)
                 }
             }
-
-
         }
     }
 

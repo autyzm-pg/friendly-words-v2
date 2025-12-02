@@ -1,12 +1,8 @@
 package com.example.friendly_words.therapist.ui.configuration.list
 
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.friendly_words.therapist.data.PreferencesRepository
-import com.example.friendly_words.therapist.ui.materials.list.MaterialsListEvent
-import com.example.shared.data.entities.Configuration
 import com.example.shared.data.entities.ConfigurationImageUsage
 import com.example.shared.data.entities.ConfigurationResource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +22,6 @@ class ConfigurationViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ConfigurationState())
     val state: StateFlow<ConfigurationState> = _state
-
 
     init {
         viewModelScope.launch {
@@ -97,12 +92,6 @@ class ConfigurationViewModel @Inject constructor(
                     }
                 }
             }
-//            is ConfigurationEvent.MarkShouldScrollToBottom -> {
-//                _state.update { it.copy(shouldScrollToBottom = event.scroll) }
-//            }
-//            is ConfigurationEvent.ShowInfo -> {
-//                _state.update { it.copy(infoMessage = event.message) }
-//            }
             is ConfigurationEvent.ClearInfoMessage -> {
                 _state.update { it.copy(infoMessage = null) }
             }
@@ -157,9 +146,7 @@ class ConfigurationViewModel @Inject constructor(
                 }
             }
 
-            is ConfigurationEvent.EditRequested -> {
-                // Obsługiwane w UI
-            }
+            is ConfigurationEvent.EditRequested -> {}
             is ConfigurationEvent.SetNewlyAddedId -> {
                 android.util.Log.d("ConfigurationsListVM", "Set newlyAddedConfigId=${event.id}")
                 _state.update { it.copy(newlyAddedConfigId = event.id) }
@@ -175,9 +162,7 @@ class ConfigurationViewModel @Inject constructor(
                 }
             }
 
-            ConfigurationEvent.CreateRequested -> {
-                // Obsługiwane w UI
-            }
+            ConfigurationEvent.CreateRequested -> {}
 
             ConfigurationEvent.DismissDialogs -> _state.update {
                 it.copy(showDeleteDialogFor = null, showActivateDialogFor = null, showCopyDialogFor = null)

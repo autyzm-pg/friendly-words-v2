@@ -27,7 +27,6 @@ class ConfigurationTestViewModel @Inject constructor() : ViewModel() {
                 is ConfigurationTestEvent.SetImageCount -> state.copy(imageCount = event.count)
                 is ConfigurationTestEvent.SetEditEnabled -> {
                     if (!event.enabled && learningState != null) {
-                        // Kopiuj wartości z Learning
                         state.copy(
                             testEditEnabled = false,
                             imageCount = learningState.imageCount,

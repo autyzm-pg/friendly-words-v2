@@ -17,5 +17,4 @@ data class ConfigurationSettingsState (
     val navigateToList: Boolean = false,
     val lastSavedConfigId: Long? = null,
     val hideExamples: Boolean = false,
-
     )

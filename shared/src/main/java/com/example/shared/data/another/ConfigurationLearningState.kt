@@ -16,12 +16,6 @@ data class ConfigurationLearningState(
     val availableImagesForLearning: Int = 0
 
 )
-private fun clampDisplayedImagesCount(requested: Int, available: Int): Int {
-    if (available <= 0) return 0
-    val maxAllowed = minOf(6, available)
-    val minAllowed = 1
-    return requested.coerceIn(minAllowed, maxAllowed)
-}
 
 fun ConfigurationLearningState.toLearningSettings(
     materialState: ConfigurationMaterialState,
@@ -29,7 +23,6 @@ fun ConfigurationLearningState.toLearningSettings(
 ): LearningSettings {
     return LearningSettings(
         numberOfWords = materialState.vocabItems.size,
-        //materials = emptyList(), // jeśli chcesz później dodać obrazy — tu je podstawisz
         displayedImagesCount = this.imageCount,
         repetitionPerWord = this.repetitionCount,
         commandType = when (this.selectedPrompt) {
