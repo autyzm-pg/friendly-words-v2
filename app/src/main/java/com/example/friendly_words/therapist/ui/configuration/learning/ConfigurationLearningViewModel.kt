@@ -53,4 +53,3 @@ class ConfigurationLearningViewModel @Inject constructor() : ViewModel() {
         }
     }
 }
-

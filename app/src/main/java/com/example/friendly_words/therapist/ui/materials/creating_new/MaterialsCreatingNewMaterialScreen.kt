@@ -17,15 +17,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,20 +34,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.friendly_words.R
 import com.example.friendly_words.therapist.ui.components.InfoDialog
 import com.example.friendly_words.therapist.ui.components.NewConfigurationTopBar
 import com.example.friendly_words.therapist.ui.components.YesNoDialog
@@ -88,9 +82,7 @@ fun MaterialsCreatingNewMaterialScreen(
     navController: NavController,
     viewModel: MaterialsCreatingNewMaterialViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
-    onSaveClick: (Long) -> Unit,
-    //resourceId: Long?
-
+    onSaveClick: (Long) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
@@ -99,11 +91,9 @@ fun MaterialsCreatingNewMaterialScreen(
     val focusManager = LocalFocusManager.current
     val hideKeyboard = rememberHideKeyboard()
 
-    // ⬇️ stan listy i scrollbara dla listy obrazków (prawa strona)
     val imagesListState = rememberLazyListState()
     val imagesScrollAreaState = rememberScrollAreaState(imagesListState)
 
-    // ⬇️ stan scrolla i scrollbara dla lewej kolumny z polami
     val leftScrollState = rememberScrollState()
     val leftScrollAreaState = rememberScrollAreaState(leftScrollState)
 
@@ -112,25 +102,13 @@ fun MaterialsCreatingNewMaterialScreen(
             hideKeyboard()
             state.newlySavedResourceId?.let { newId ->
 
-                // 1) wypisz current/previous entry i ich klucze
-                val currentEntry = navController.currentBackStackEntry
-                val prevEntry    = navController.previousBackStackEntry
-                Log.d("NavDebug", "▶▶ current route = ${currentEntry?.destination?.route}, " +
-                        "handleKeys = ${currentEntry?.savedStateHandle?.keys()}")
-                Log.d("NavDebug", "▶▶ previous route = ${prevEntry?.destination?.route}, " +
-                        "handleKeys = ${prevEntry?.savedStateHandle?.keys()}")
-
-                // 2) wypisz klucze handle'u dla ekranu listy po jego ROUTE
                 val listEntry = navController.getBackStackEntry(NavRoutes.MATERIALS)
-                Log.d("NavDebug", "▶▶ MATERIALS handle keys before set = ${listEntry.savedStateHandle.keys()}")
 
-                // 3) zapis nowego ID i wiadomości pod tym handle'em
                 listEntry.savedStateHandle["newlySavedResourceId"] = newId
                 listEntry.savedStateHandle["message"]            =
                     if (state.isEditing) "Pomyślnie zaktualizowano materiał"
                     else                   "Pomyślnie dodano materiał"
 
-                // 4) wróć do ekranu listy
                 navController.popBackStack()
             }
             viewModel.onEvent(MaterialsCreatingNewMaterialEvent.ResetSaveCompleted)
@@ -150,7 +128,6 @@ fun MaterialsCreatingNewMaterialScreen(
         keyboardController?.show()
     }
 
-    // Launcher do wyboru obrazu z galerii
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
@@ -218,7 +195,6 @@ fun MaterialsCreatingNewMaterialScreen(
                     .fillMaxSize()
                     .weight(1f)
             ) {
-                // ⬅️ Lewa kolumna ze ScrollArea + VerticalScrollbar
                 Box(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -231,7 +207,7 @@ fun MaterialsCreatingNewMaterialScreen(
                                 verticalArrangement = Arrangement.Top,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Spacer(modifier = Modifier.height(40.dp))//bylo 110
+                                Spacer(modifier = Modifier.height(40.dp))
 
                                 Text(
                                     "Uczone pojęcie (słowo)",
@@ -271,7 +247,7 @@ fun MaterialsCreatingNewMaterialScreen(
                                 Text("Kategoria", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = DarkBlue)
                                 Spacer(modifier = Modifier.height(8.dp))
                                 OutlinedTextField(
-                                    value = state.category, // <-- wymaga pola 'category' w stanie
+                                    value = state.category,
                                     onValueChange = { viewModel.onEvent(MaterialsCreatingNewMaterialEvent.CategoryChanged(it)) },
                                     label = { Text("Wpisz kategorię (np. zwierzę)") },
                                     modifier = Modifier
@@ -294,7 +270,6 @@ fun MaterialsCreatingNewMaterialScreen(
 
                                 Spacer(modifier = Modifier.height(16.dp))
 
-                                // Checkbox: czy zezwolić na edycję "Nazwa zasobu"
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.fillMaxWidth(0.8f)
@@ -313,7 +288,6 @@ fun MaterialsCreatingNewMaterialScreen(
                                             uncheckedColor = Color.Gray,
                                             checkmarkColor = Color.White
                                         )
-
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text("Inna nazwa materiału", fontSize = 16.sp)
@@ -384,7 +358,6 @@ fun MaterialsCreatingNewMaterialScreen(
                     }
                 }
 
-                // ➡️ Prawa kolumna
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.SpaceBetween,
@@ -504,7 +477,6 @@ fun MaterialsCreatingNewMaterialScreen(
                                                         }
                                                     }
                                                 }
-                                                // wypełnij wiersz pustymi miejscami, jeśli ma < 3 elementy
                                                 repeat(3 - group.size) {
                                                     Spacer(modifier = Modifier.weight(1f))
                                                 }
@@ -525,7 +497,6 @@ fun MaterialsCreatingNewMaterialScreen(
                         }
                     }
 
-                    // 🔽 Przyciski na dole
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()

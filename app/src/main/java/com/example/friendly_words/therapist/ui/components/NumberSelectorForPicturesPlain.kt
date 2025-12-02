@@ -19,8 +19,8 @@ fun NumberSelectorForPicturesPlain(
     maxValue: Int,
     value: Int,
     onValueChange: (Int) -> Unit = {},
-    enabled: Boolean = true,                  // wyłącza TYLKO przyciski
-    labelColor: Color = Color.Black           // nigdy nie zmieniamy koloru/weight
+    enabled: Boolean = true,
+    labelColor: Color = Color.Black
 ) {
     val canDecrement = value > minValue
     val canIncrement = value < maxValue

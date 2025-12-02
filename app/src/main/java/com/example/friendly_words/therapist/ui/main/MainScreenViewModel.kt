@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -155,7 +154,6 @@ class MainScreenViewModel @Inject constructor(
         val rawResources = resourceRepository.getAll().first()
         if(rawResources.isEmpty())
         {
-            //dodawanie materialow przykladowych po odpaleniu aplikacji
             insertExampleMaterialsWithImages()
         }
     }

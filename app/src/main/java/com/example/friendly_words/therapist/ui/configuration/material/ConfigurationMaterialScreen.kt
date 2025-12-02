@@ -158,12 +158,9 @@ fun ConfigurationMaterialScreen(
     onBackClick: () -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    val listState = rememberLazyListState()
-    val scrollAreaState = rememberScrollAreaState(listState)
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    // 👇 nowy stan na pop-up z info
     var showHideExamplesInfo by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -172,7 +169,6 @@ fun ConfigurationMaterialScreen(
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            // LEWA STRONA
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -182,7 +178,6 @@ fun ConfigurationMaterialScreen(
             ) {
                 Column(modifier = Modifier.fillMaxHeight()) {
 
-                    // nagłówek
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -206,7 +201,6 @@ fun ConfigurationMaterialScreen(
                             }
                     }
 
-                    // lista
                     LazyColumn(
                         modifier = Modifier
                             .weight(1f)
@@ -299,7 +293,6 @@ fun ConfigurationMaterialScreen(
                         }
                     }
 
-                    // dialog usuwania
                     val indexToDelete = state.wordIndexToDelete
                     if (
                         state.showDeleteDialog &&
@@ -319,7 +312,6 @@ fun ConfigurationMaterialScreen(
                         )
                     }
 
-                    // przycisk DODAJ + ikonka info
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -344,7 +336,6 @@ fun ConfigurationMaterialScreen(
                             )
                         }
 
-                        // 👇 MAŁA IKONKA INFO
                         IconButton(
                             onClick = { showHideExamplesInfo = true },
                             modifier = Modifier
@@ -362,7 +353,6 @@ fun ConfigurationMaterialScreen(
                 }
             }
 
-            // PRAWA STRONA – obrazki
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -418,7 +408,6 @@ fun ConfigurationMaterialScreen(
             }
         }
 
-        // DIALOG DODAWANIA (to co miałeś)
         if (state.showAddDialog) {
             val dialogListState = rememberLazyListState()
             val dialogScrollAreaState = rememberScrollAreaState(dialogListState)
@@ -615,7 +604,7 @@ fun ConfigurationMaterialScreen(
                 Box(
                     modifier = Modifier
                         .clickable(
-                            indication = null, // 🔇 brak ripple
+                            indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) {
                             showHideExamplesInfo = false
@@ -632,5 +621,4 @@ fun ConfigurationMaterialScreen(
             }
         )
     }
-
 }

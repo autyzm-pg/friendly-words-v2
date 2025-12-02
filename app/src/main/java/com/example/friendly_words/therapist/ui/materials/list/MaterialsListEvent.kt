@@ -15,4 +15,3 @@ sealed class MaterialsListEvent {
     object DismissCopyDialog : MaterialsListEvent()
     data class ShowUsedInConfigurations(val resource: Resource, val configurations: List<String>) : MaterialsListEvent()
 }
-

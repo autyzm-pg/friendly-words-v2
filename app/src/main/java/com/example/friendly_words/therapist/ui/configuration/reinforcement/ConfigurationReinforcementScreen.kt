@@ -44,7 +44,6 @@ fun ConfigurationReinforcementScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // lewa strona ekranu
             val configuration = LocalConfiguration.current
             val screenHeight = configuration.screenHeightDp.dp
 
@@ -152,7 +151,6 @@ fun ConfigurationReinforcementScreen(
                 }
             }
 
-            //prawa strona ekranu
             Column(
                 modifier = Modifier
                     .weight(1f)

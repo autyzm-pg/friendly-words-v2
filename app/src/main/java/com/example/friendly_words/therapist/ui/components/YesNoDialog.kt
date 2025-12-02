@@ -1,4 +1,5 @@
 package com.example.friendly_words.therapist.ui.components
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.friendly_words.therapist.ui.theme.DarkBlue
-
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
@@ -73,8 +73,6 @@ fun YesNoDialog(
     }
 }
 
-
-// tu preview za duzo nic nie daje bo nie pokazuje odpowiedniej wielkosci okna
 @Preview(showBackground = true)
 @Composable
 fun YesNoDialogPreview() {

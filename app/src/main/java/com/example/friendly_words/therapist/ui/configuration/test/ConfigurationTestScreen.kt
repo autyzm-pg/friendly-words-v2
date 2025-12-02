@@ -34,9 +34,9 @@ import com.composables.core.rememberScrollAreaState
 @Composable
 fun ConfigurationTestScreen(
     state: ConfigurationTestState,
-    availableImagesForTest: Int,      // realna dostępność testu
-    availableImagesForLearning: Int,  // realna dostępność uczenia
-    learningImageCount: Int,          // ustawiona liczba w uczeniu
+    availableImagesForTest: Int,
+    availableImagesForLearning: Int,
+    learningImageCount: Int,
     onEvent: (ConfigurationTestEvent) -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -49,27 +49,18 @@ fun ConfigurationTestScreen(
     val learningAvailable = availableImagesForLearning.coerceAtLeast(0)
     val testAvailableRaw = availableImagesForTest.coerceAtLeast(0)
 
-    // ⬇️ KLUCZ: jeśli edycja testu jest WYŁĄCZONA i w uczeniu 0 -> blokujemy na 0.
-    //           jeśli edycja testu jest WŁĄCZONA -> używamy realnej dostępności testu.
     val effectiveAvailable =
         if (!state.testEditEnabled && learningAvailable == 0) 0 else testAvailableRaw
 
     val minAllowed = if (effectiveAvailable == 0) 0 else 1
     val maxAllowed = effectiveAvailable
-    val defaultImageCount = when {
-        effectiveAvailable == 0 -> 0
-        effectiveAvailable < 3 -> effectiveAvailable
-        else -> 3
-    }
     val globalMaxAllowed = 6
 
-    // UI zawsze pokazuje wartość w bieżącym zakresie testu
     val clampedValueForUI =
         if (effectiveAvailable == 0) 0 else state.imageCount.coerceIn(1, maxAllowed)
 
     var dialogMessage by remember { mutableStateOf<String?>(null) }
 
-    // Synchronizacja przy zmianie: dostępności, dziedziczenia z uczenia i przełączania edycji
     LaunchedEffect(effectiveAvailable, learningImageCount, state.testEditEnabled) {
         if (!state.testEditEnabled) {
             // Dziedziczenie z UCZENIA
@@ -157,8 +148,8 @@ fun ConfigurationTestScreen(
                         minValue = minAllowed,
                         maxValue = maxAllowed,
                         value = clampedValueForUI,
-                        enabled = state.testEditEnabled && effectiveAvailable > 0, // blokada przycisków
-                        labelEnabled = state.testEditEnabled,                      // 🔸 styl zawsze wg checkboxa
+                        enabled = state.testEditEnabled && effectiveAvailable > 0,
+                        labelEnabled = state.testEditEnabled,
                         labelColor = Color.Black,
                         onValueChange = { newValue ->
                             val clamped = if (effectiveAvailable == 0) 0 else newValue.coerceIn(1, maxAllowed)

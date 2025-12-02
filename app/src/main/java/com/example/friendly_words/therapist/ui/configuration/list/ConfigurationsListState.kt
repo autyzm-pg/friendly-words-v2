@@ -15,4 +15,3 @@ data class ConfigurationState(
     val shouldScrollToTop: Boolean = false,
     val hideExamples: Boolean = false
 )
-

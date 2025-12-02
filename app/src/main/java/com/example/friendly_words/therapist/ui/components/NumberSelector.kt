@@ -2,7 +2,6 @@ package com.example.friendly_words.therapist.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-//import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier

@@ -37,7 +37,6 @@ fun ConfigurationLearningScreen(
     onEvent: (ConfigurationLearningEvent) -> Unit,
     onBackClick: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
     var textFieldSize by remember { mutableStateOf(IntSize.Zero) }
     val options = listOf("{Słowo}", "Gdzie jest {Słowo}", "Pokaż gdzie jest {Słowo}")
     val rightScrollState = rememberScrollState()
@@ -93,7 +92,6 @@ fun ConfigurationLearningScreen(
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            // Lewa kolumna
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -101,7 +99,6 @@ fun ConfigurationLearningScreen(
                     .padding(16.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                // ⬅️ ScrollArea + scrollbar dla lewej kolumny
                 ScrollArea(state = leftScrollAreaState) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -122,15 +119,14 @@ fun ConfigurationLearningScreen(
 
                             Spacer(modifier = Modifier.height(29.dp))
 
-                            // === LICZBA OBRAZKÓW ===
                             if (available == 0) {
                                 // 0 dostępnych -> neutralny selector (bez szarzenia label/value)
                                 NumberSelectorForPicturesPlain(
                                     label = "Liczba obrazków wyświetlanych na ekranie:",
                                     minValue = 0,
                                     maxValue = 0,
-                                    value = state.imageCount, // i tak ustawiany na 0 w LaunchedEffect
-                                    enabled = false,          // przyciski off, ale wygląd bez zmian
+                                    value = state.imageCount,
+                                    enabled = false,
                                     labelColor = Color.Black
                                 )
 
@@ -258,8 +254,6 @@ fun ConfigurationLearningScreen(
                 }
             }
 
-
-            // Prawa kolumna – dodany scroll + scrollbar
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -278,7 +272,6 @@ fun ConfigurationLearningScreen(
                                 .verticalScroll(rightScrollState),
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
-
                             Text(
                                 text = "Ustawienia uczenia",
                                 fontSize = 28.sp,
