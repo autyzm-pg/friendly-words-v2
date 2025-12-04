@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,12 +27,10 @@ import com.example.friendly_words.therapist.ui.theme.LightBlue2
 object NavRoutes {
     const val MAIN = "main"
 
-    // Materiały
     const val MATERIALS = "materials"
     const val MATERIAL_CREATE = "materials/create"
     const val MATERIAL_EDIT = "materials/edit/{resourceId}"
 
-    // Konfiguracje
     const val CONFIG_LIST = "config"
     const val CONFIG_CREATE = "config/create"
     const val CONFIG_EDIT = "config/edit/{configId}"
@@ -136,9 +133,6 @@ fun MainScreen() {
     }
 }
 
-
-
-
 @Composable
 fun MainContent(
     activeConfiguration: Pair<String, String>?,
@@ -151,7 +145,6 @@ fun MainContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                //modifier = Modifier.height(95.dp),
                 title = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -170,11 +163,9 @@ fun MainContent(
                                     modifier = Modifier.size(32.dp)
                                 )
                             }
-
                     }
                 },
                 backgroundColor = DarkBlue
-
             )
         }
     )  { padding ->
@@ -228,8 +219,6 @@ fun MainContent(
                         }
                     }
 
-
-
                 Button(
                     onClick = onConfigClick,
                     colors = ButtonDefaults.buttonColors(
@@ -253,9 +242,7 @@ fun MainContent(
                             modifier = Modifier.size(32.dp)
                         )
                     }
-
                 }
-
             }
         }
     }
@@ -335,5 +322,4 @@ fun MainContent(
             }
         )
     }
-
 }

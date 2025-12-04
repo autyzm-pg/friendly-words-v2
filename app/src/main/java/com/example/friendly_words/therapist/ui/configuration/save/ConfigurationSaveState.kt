@@ -8,5 +8,4 @@ data class ConfigurationSaveState(
     val editingConfigId: Long? = null,
     val showEmptyNameDialog: Boolean = false,
     val showDuplicateNameDialog: Boolean = false
-
 )

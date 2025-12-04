@@ -24,6 +24,4 @@ sealed class MaterialsCreatingNewMaterialEvent {
     object ConfirmSaveDespiteDuplicate: MaterialsCreatingNewMaterialEvent()
     object DismissEmptyFieldsDialog : MaterialsCreatingNewMaterialEvent()
     data class CategoryChanged(val newCategory: String) : MaterialsCreatingNewMaterialEvent()
-
-
 }

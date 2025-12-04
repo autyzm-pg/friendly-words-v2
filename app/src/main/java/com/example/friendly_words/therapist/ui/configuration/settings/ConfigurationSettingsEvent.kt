@@ -9,14 +9,13 @@ import com.example.friendly_words.therapist.ui.configuration.test.ConfigurationT
 sealed class ConfigurationSettingsEvent {
     data class Material(val event: ConfigurationMaterialEvent) : ConfigurationSettingsEvent()
     data class Learning(val event: ConfigurationLearningEvent) : ConfigurationSettingsEvent()
-    data class Reinforcement(val event: ConfigurationReinforcementEvent) : ConfigurationSettingsEvent()
+    data class Reinforcement(val event: ConfigurationReinforcementEvent) :
+        ConfigurationSettingsEvent()
+
     data class Test(val event: ConfigurationTestEvent) : ConfigurationSettingsEvent()
     data class Save(val event: ConfigurationSaveEvent) : ConfigurationSettingsEvent()
     data object ShowExitDialog : ConfigurationSettingsEvent()
     data object CancelExitDialog : ConfigurationSettingsEvent()
     data object ConfirmExitDialog : ConfigurationSettingsEvent()
-    //object ClearInfoMessage : ConfigurationSettingsEvent()
     object ResetNavigation : ConfigurationSettingsEvent()
-
-
 }
