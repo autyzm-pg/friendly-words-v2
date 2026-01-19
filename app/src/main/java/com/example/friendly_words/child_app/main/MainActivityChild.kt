@@ -1,5 +1,6 @@
 package com.example.friendly_words.child_app.main
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,6 +34,7 @@ import java.lang.Math.sqrt
 class MainActivityChild : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
         setContent {
             val viewModel: ChildMainViewModel = hiltViewModel()
             MaterialTheme {

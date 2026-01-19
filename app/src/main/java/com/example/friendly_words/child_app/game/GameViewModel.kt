@@ -22,14 +22,12 @@ class GameViewModel @Inject constructor(
 
     var isTestMode = mutableStateOf(false)
 
-    // ---------- DANE GRY ----------
     var rounds = mutableStateOf<List<GameRound>>(emptyList())
     var currentRoundIndex = mutableStateOf(0)
     var correctAnswersCount = mutableStateOf(0)
     var wrongAnswersCount = mutableStateOf(0)
     var repeatStage = mutableStateOf(0)
 
-    // ---------- STANY UI ----------
     var showCongratsScreen = mutableStateOf(false)
     var goNextAfterCongrats = mutableStateOf(false)
     var answerJudged = mutableStateOf(false)
@@ -37,11 +35,9 @@ class GameViewModel @Inject constructor(
     var hadMistakeThisRound = mutableStateOf(false)
     var showHint = mutableStateOf(false)
 
-    // ---------- AKTYWNE USTAWIENIA ----------
     var activeLearningSettings = mutableStateOf<LearningSettings?>(null)
     var activeTestSettings = mutableStateOf<com.example.shared.data.entities.TestSettings?>(null)
 
-    // ---------- PODPOWIEDZI z LearningSettings ----------
     val dimIncorrect: State<Boolean> = derivedStateOf {
         activeLearningSettings.value?.typesOfHints?.contains("Wyszarz niepoprawne") == true
     }
@@ -57,8 +53,8 @@ class GameViewModel @Inject constructor(
     val animationsEnabled: State<Boolean> = derivedStateOf {
         activeLearningSettings.value?.animationsEnabled == true
     }
+    val shouldReinforce = mutableStateOf(false)
 
-    // ---------- OBSERWOWANY COMMAND TYPE ----------
     val commandType: State<String> = derivedStateOf {
         if (isTestMode.value) {
             when (activeTestSettings.value?.commandType) {
@@ -126,16 +122,13 @@ class GameViewModel @Inject constructor(
                     val materialState = configurationRepository.getMaterialState(config.id)
                     val reinforcementState = configurationRepository.getReinforcementState(config.id)
 
-                    // learning
                     activeLearningSettings.value = config.toLearningSettings(
                         materialState = materialState,
                         reinforcementState = reinforcementState
                     )
 
-                    // test (bierzesz bezpośrednio z configu)
                     activeTestSettings.value = config.testSettings
 
-                    // wybór parametrów rund:
                     val roundSettings = if (isTestMode.value) {
                         activeTestSettings.value?.asRoundSettings()
                     } else {
@@ -175,12 +168,12 @@ class GameViewModel @Inject constructor(
             }
         }
 
-        // Reset stanu rundy przy przejściu do następnej
         answerJudged.value = false
         correctClicked.value = false
         hadMistakeThisRound.value = false
         showCongratsScreen.value = false
         goNextAfterCongrats.value = false
         showHint.value = false
+        shouldReinforce.value = false
     }
 }

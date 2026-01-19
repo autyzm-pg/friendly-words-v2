@@ -28,6 +28,8 @@ fun GameScreen(
     val rounds by viewModel.rounds
     val showHint by viewModel.showHint
     val isTest = viewModel.isTestMode.value
+    val shouldReinforce by viewModel.shouldReinforce
+
 
     if (rounds.isEmpty() || currentRoundIndex >= rounds.size) return
 
@@ -120,6 +122,10 @@ fun GameScreen(
 
         if (isCorrectClick && !viewModel.correctClicked.value) {
             viewModel.correctClicked.value = true
+
+            val noMistake = !viewModel.hadMistakeThisRound.value && !viewModel.showHint.value
+            viewModel.shouldReinforce.value = noMistake
+
             if (!viewModel.hadMistakeThisRound.value) viewModel.correctAnswersCount.value++
 
             if (isTest) {
@@ -169,7 +175,7 @@ fun GameScreen(
             spritesCars to TravelDirection.RIGHT
         )
 
-        val (chosenSprites, chosenDirection) = if (animationsEnabled) {
+        val (chosenSprites, chosenDirection) = if (animationsEnabled && shouldReinforce) {
             allSpriteSets.random()
         } else (emptyList<Int>() to TravelDirection.UP)
 
@@ -179,7 +185,7 @@ fun GameScreen(
             speakWordAndPraise = {
                 if (ttsReady) {
                     tts.speak(correctItem.label, TextToSpeech.QUEUE_FLUSH, null, "word")
-                    if (currentPraise.isNotBlank()) {
+                    if (shouldReinforce && currentPraise.isNotBlank()) {
                         tts.speak(currentPraise, TextToSpeech.QUEUE_ADD, null, "praise")
                     }
                 }
