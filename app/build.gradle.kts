@@ -6,12 +6,26 @@ plugins {
     alias(libs.plugins.hilt.android)
 }
 
+import java.util.Properties
+
+val isGithubActions = System.getenv("GITHUB_ACTIONS") == "true"
+
+val keystoreProperties = Properties().apply {
+    val keystorePropertiesFile = rootProject.file("keystore.properties")
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+fun signingProp(key: String): String? =
+    if (isGithubActions) System.getenv(key) else keystoreProperties.getProperty(key)
+
 android {
     namespace = "com.example.friendly_words"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.friendly_words"
+        applicationId = "pg.autyzm.friendlywords"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -20,8 +34,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            val path = signingProp("KEYSTORE_PATH")
+            storeFile = path?.let { file(it) }
+            storePassword = signingProp("KEYSTORE_PASSWORD")
+            keyAlias = signingProp("KEY_ALIAS")
+            keyPassword = signingProp("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
