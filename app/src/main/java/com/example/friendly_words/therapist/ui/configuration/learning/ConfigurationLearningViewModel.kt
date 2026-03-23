@@ -11,7 +11,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ConfigurationLearningViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow(ConfigurationLearningState())
+    private val _state: MutableStateFlow<ConfigurationLearningState> =
+        MutableStateFlow(ConfigurationLearningState())
     val state: StateFlow<ConfigurationLearningState> = _state
 
     fun onEvent(event: ConfigurationLearningEvent) {
