@@ -229,7 +229,7 @@ class MainScreenViewModel @Inject constructor(
 
             val baseName = normalizeName(resource.name.lowercase().replace(" ", "_"))
             val imagePaths = (1..3).map { index ->
-                "file:///android_asset/exemplary_photos/${baseName}_${index}.png"
+                "file:///android_asset/exemplary_photos/${baseName}_${index}.webp"
             }
 
             val images = imagePaths.map { path -> Image(path = path) }
