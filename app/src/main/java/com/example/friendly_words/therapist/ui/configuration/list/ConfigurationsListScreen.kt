@@ -120,35 +120,39 @@ fun ConfigurationsListScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
-                        }
-                        Text(
-                            "Przyjazne Słowa Ustawienia",
-                            fontSize = 30.sp,
-                            modifier = Modifier.weight(1f),
-                            color = Color.White
-                        )
-                        Text(
-                            "UTWÓRZ",
-                            fontSize = 30.sp,
-                            color = Color.White,
-                            modifier = Modifier.clickable {
-                                viewModel.onEvent(ConfigurationEvent.CreateRequested)
-                                onCreateClick()
+            Box(modifier = Modifier.background(DarkBlue)) {
+                TopAppBar(
+                    modifier = Modifier.statusBarsPadding(),
+                    backgroundColor = Color.Transparent,
+                    elevation = 0.dp,
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            IconButton(onClick = onBackClick) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                             }
-                        )
-                        Spacer(modifier = Modifier.width(15.dp))
+                            Text(
+                                "Przyjazne Słowa Ustawienia",
+                                fontSize = 30.sp,
+                                modifier = Modifier.weight(1f),
+                                color = Color.White
+                            )
+                            Text(
+                                "UTWÓRZ",
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                modifier = Modifier.clickable {
+                                    viewModel.onEvent(ConfigurationEvent.CreateRequested)
+                                    onCreateClick()
+                                }
+                            )
+                            Spacer(modifier = Modifier.width(15.dp))
+                        }
                     }
-                },
-                backgroundColor = DarkBlue
-            )
+                )
+            }
         },
         snackbarHost = {
             SnackbarHost(

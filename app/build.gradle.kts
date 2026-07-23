@@ -22,12 +22,12 @@ fun signingProp(key: String): String? =
 
 android {
     namespace = "com.example.friendly_words"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "pg.autyzm.friendlywords"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 2
         versionName = "1.0"
 
@@ -96,8 +96,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.compose.material:material:1.5.4")
-    implementation("androidx.compose.material:material-icons-extended:1.6.0")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation("com.composables:core:1.32.0")
     implementation("androidx.datastore:datastore-preferences:1.1.7")

@@ -1,5 +1,6 @@
 package com.example.friendly_words.therapist.ui.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -144,29 +145,33 @@ fun MainContent(
     var showConfigInfo by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            "Przyjazne Słowa Ustawienia",
-                            fontSize = 30.sp,
-                            color = Color.White
-                        )
-                            IconButton(onClick = { showInfo = true }) {
-                                Icon(
-                                    imageVector = Icons.Default.Info,
-                                    contentDescription = "Informacje",
-                                    tint = Color.White,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                            }
+            Box(modifier = Modifier.background(DarkBlue)) {
+                TopAppBar(
+                    modifier = Modifier.statusBarsPadding(),
+                    backgroundColor = Color.Transparent,
+                    elevation = 0.dp,
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                "Przyjazne Słowa Ustawienia",
+                                fontSize = 30.sp,
+                                color = Color.White
+                            )
+                                IconButton(onClick = { showInfo = true }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Info,
+                                        contentDescription = "Informacje",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(32.dp)
+                                    )
+                                }
+                        }
                     }
-                },
-                backgroundColor = DarkBlue
-            )
+                )
+            }
         }
     )  { padding ->
         Box(

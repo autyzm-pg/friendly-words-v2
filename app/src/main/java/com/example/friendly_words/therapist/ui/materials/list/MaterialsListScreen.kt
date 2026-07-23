@@ -108,38 +108,42 @@ fun MaterialsListScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                backgroundColor = DarkBlue,
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        IconButton(onClick = onBackClick) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back",
-                                tint = Color.White
+            Box(modifier = Modifier.background(DarkBlue)) {
+                TopAppBar(
+                    modifier = Modifier.statusBarsPadding(),
+                    backgroundColor = Color.Transparent,
+                    elevation = 0.dp,
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            IconButton(onClick = onBackClick) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color.White
+                                )
+                            }
+
+                            Text(
+                                "Materiały edukacyjne",
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                modifier = Modifier.weight(1f)
                             )
+
+                            Text(
+                                "DODAJ",
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                modifier = Modifier.clickable { onCreateClick() }
+                            )
+                            Spacer(modifier = Modifier.width(15.dp))
                         }
-
-                        Text(
-                            "Materiały edukacyjne",
-                            fontSize = 30.sp,
-                            color = Color.White,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Text(
-                            "DODAJ",
-                            fontSize = 30.sp,
-                            color = Color.White,
-                            modifier = Modifier.clickable { onCreateClick() }
-                        )
-                        Spacer(modifier = Modifier.width(15.dp))
                     }
-                }
-            )
+                )
+            }
         },
         snackbarHost = {
             SnackbarHost(
