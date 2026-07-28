@@ -17,6 +17,7 @@
             android:roundIcon="@drawable/friendly_words_settings"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Friendlywords"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|density"
             android:taskAffinity="com.example.friendly_words.therapist.ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +32,7 @@
             android:roundIcon="@drawable/friendly_words"
             android:theme="@style/Theme.Friendlywords"
             android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|density"
             android:taskAffinity="com.example.friendly_words.child_app.main.MainActivityChild">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

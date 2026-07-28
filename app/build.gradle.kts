@@ -20,6 +20,10 @@ val keystoreProperties = Properties().apply {
 fun signingProp(key: String): String? =
     if (isGithubActions) System.getenv(key) else keystoreProperties.getProperty(key)
 
+val majorCounter = System.getenv("MAJOR_COUNTER")?.toIntOrNull() ?: 1
+val minorCounter = System.getenv("MINOR_COUNTER")?.toIntOrNull() ?: 0
+val patchCounter = System.getenv("PATCH_COUNTER")?.toIntOrNull() ?: 0
+
 android {
     namespace = "com.example.friendly_words"
     compileSdk = 36
@@ -28,8 +32,8 @@ android {
         applicationId = "pg.autyzm.friendlywords"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0"
+        versionCode = if (isGithubActions) (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1) else maxOf(patchCounter, 1)
+        versionName = "$majorCounter.$minorCounter.$patchCounter"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
